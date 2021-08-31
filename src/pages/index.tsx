@@ -1,5 +1,8 @@
 import Head from 'next/head';
 
+import { Main } from 'components';
+import Sidebar from 'parts/Sidebar/Sidebar';
+
 const Home: React.FC = () => {
   return (
     <div>
@@ -12,11 +15,9 @@ const Home: React.FC = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <h1 className="text-6xl font-bold">
-          Welcome to Guia do mochileiro das estrelas!
-        </h1>
-      </main>
+      <Main>
+        <Sidebar />
+      </Main>
     </div>
   );
 };

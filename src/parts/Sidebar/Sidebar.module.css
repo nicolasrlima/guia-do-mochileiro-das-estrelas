@@ -1,0 +1,12 @@
+.sidebar-open {
+  @apply w-full;
+}
+
+.sidebar-closed {
+  @apply w-0;
+}
+
+.sidebar-open,
+.sidebar-closed {
+  @apply md:w-full;
+}
