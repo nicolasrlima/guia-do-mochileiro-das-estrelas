@@ -1,7 +1,7 @@
 import Head from 'next/head';
 
 import { Main } from 'components';
-import Sidebar from 'parts/Sidebar/Sidebar';
+import Layout from 'parts/Layout/Layout';
 
 const Home: React.FC = () => {
   return (
@@ -15,9 +15,7 @@ const Home: React.FC = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Main>
-        <Sidebar />
-      </Main>
+      <Layout>CONTENT</Layout>
     </div>
   );
 };
