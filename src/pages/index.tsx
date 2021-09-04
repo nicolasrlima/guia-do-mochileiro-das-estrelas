@@ -5,13 +5,19 @@ import { Character } from 'interfaces/Characters';
 import Layout from 'parts/Layout/Layout';
 import api from 'services/api';
 import { Planet } from 'interfaces/Planets';
+import { Starship } from 'interfaces/Starship';
 
 interface HomeProps {
   highlightedCharacter: Character;
-  planet: Planet;
+  highlightedCharacterPlanet: Planet;
+  randomPlanet: Planet;
 }
 
-const Home: React.FC<HomeProps> = ({ highlightedCharacter, planet }) => {
+const Home: React.FC<HomeProps> = ({
+  highlightedCharacter,
+  highlightedCharacterPlanet,
+  randomPlanet
+}) => {
   return (
     <div>
       <Head>
@@ -39,7 +45,18 @@ const Home: React.FC<HomeProps> = ({ highlightedCharacter, planet }) => {
             A pessoa em destaque hoje é{' '}
             {highlightedCharacter.gender === 'female' ? 'a' : 'o'} ilustre{' '}
             {highlightedCharacter.name}, nascido no ano{' '}
-            {highlightedCharacter.birth_year} no planeta {planet?.name}.
+            {highlightedCharacter.birth_year} no planeta{' '}
+            {highlightedCharacterPlanet?.name}.
+          </p>
+        </Card>
+
+        <Card title="Recomendação de viagem">
+          <span className="text-lg font-semibold">{randomPlanet.name}</span>
+          <p>
+            O planeta {randomPlanet.name} tem uma população de{' '}
+            {randomPlanet.population} habitantes, um período de rotação de{' '}
+            {randomPlanet.rotation_period} horas e um período orbital de{' '}
+            {randomPlanet.orbital_period} horas.
           </p>
         </Card>
       </Layout>
@@ -49,25 +66,41 @@ const Home: React.FC<HomeProps> = ({ highlightedCharacter, planet }) => {
 
 export default Home;
 
-export async function getServerSideProps() {
-  const allCharacters = await api.get('/people');
-  const characterCount = allCharacters.data.count;
-  const randomCharacterIndex = Math.floor(Math.random() * characterCount + 1);
+const getRandomElementByEndpoint = async <T extends unknown>(
+  endpoint: string
+) => {
+  const allElements = await api.get(endpoint);
+  const elementsCount = allElements.data.count;
+  const randomElementIndex = Math.floor(Math.random() * elementsCount + 1);
 
-  const characterResponse = await api.get<Character>(
-    `/people/${randomCharacterIndex}`
+  const elementResponse = await api.get<T>(`${endpoint}/${randomElementIndex}`);
+
+  return elementResponse.data;
+};
+
+export async function getServerSideProps() {
+  const highlightedCharacter = await getRandomElementByEndpoint<Character>(
+    '/people'
   );
-  const highlightedCharacter = characterResponse.data;
 
   const planetResponse = await api.get<Planet>(
     highlightedCharacter.homeworld.split('/api')[1]
   );
-  const planet = planetResponse.data;
+
+  const highlightedCharacterPlanet = planetResponse.data;
+
+  const randomPlanet = await getRandomElementByEndpoint<Planet>('/planets');
+
+  const randomStarship = await getRandomElementByEndpoint<Starship>(
+    '/starships'
+  );
 
   return {
     props: {
       highlightedCharacter,
-      planet
+      highlightedCharacterPlanet,
+      randomPlanet,
+      randomStarship
     }
   };
 }
