@@ -3,7 +3,7 @@ interface MainProps {
 }
 
 const Main: React.FC<MainProps> = ({ children }) => {
-  return <main className="bg-gray-100 flex h-screen">{children}</main>;
+  return <main className="bg-gray-100 h-screen overflow-auto">{children}</main>;
 };
 
 export default Main;

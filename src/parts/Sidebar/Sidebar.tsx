@@ -5,7 +5,7 @@ import styles from './Sidebar.module.css';
 import Header from 'parts/Header/Header';
 
 const Sidebar: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsOpen((oldValue) => !oldValue);
