@@ -8,5 +8,5 @@
 
 .sidebar-open,
 .sidebar-closed {
-  @apply md:w-full;
+  @apply md:w-64;
 }
