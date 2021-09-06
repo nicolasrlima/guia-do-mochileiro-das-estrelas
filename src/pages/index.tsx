@@ -1,6 +1,6 @@
 import Head from 'next/head';
 
-import { Card, Main } from 'components';
+import { Button, Card, Main } from 'components';
 import { Character } from 'interfaces/Characters';
 import Layout from 'parts/Layout/Layout';
 import api from 'services/api';
@@ -11,12 +11,14 @@ interface HomeProps {
   highlightedCharacter: Character;
   highlightedCharacterPlanet: Planet;
   randomPlanet: Planet;
+  randomStarship: Starship;
 }
 
 const Home: React.FC<HomeProps> = ({
   highlightedCharacter,
   highlightedCharacterPlanet,
-  randomPlanet
+  randomPlanet,
+  randomStarship
 }) => {
   return (
     <div>
@@ -30,35 +32,59 @@ const Home: React.FC<HomeProps> = ({
       </Head>
 
       <Layout>
-        <Card title="Bem vindo ao Guia Estelar!">
-          Bem vindo ao <strong>Guia Estelar</strong>, o seu guia de bolso para o
-          universo de Star Wars. Aqui você irá encontrar informações sobre os
-          personagens, planetas e naves do universo. Além de poder comprar sua
-          nave graças ao nosso patrocinador, <strong>R2 Naves</strong>.
-        </Card>
+        <div className="flex flex-col gap-4 md:grid md:grid-cols-2">
+          <Card className="col-start-1" title="Bem vindo ao Guia Estelar!">
+            Bem vindo ao <strong>Guia Estelar</strong>, o seu guia de bolso para
+            o universo de Star Wars. Aqui você irá encontrar informações sobre
+            os personagens, planetas e naves do universo. Além de poder comprar
+            sua nave graças ao nosso patrocinador, <strong>R2 Naves</strong>.
+          </Card>
 
-        <Card title="Pessoa em destaque do momento!">
-          <span className="text-lg font-semibold">
-            {highlightedCharacter.name}
-          </span>
-          <p>
-            A pessoa em destaque hoje é{' '}
-            {highlightedCharacter.gender === 'female' ? 'a' : 'o'} ilustre{' '}
-            {highlightedCharacter.name}, nascido no ano{' '}
-            {highlightedCharacter.birth_year} no planeta{' '}
-            {highlightedCharacterPlanet?.name}.
-          </p>
-        </Card>
+          <Card className="col-start-1" title="Pessoa em destaque do momento!">
+            <span className="text-lg font-semibold">
+              {highlightedCharacter.name}
+            </span>
+            <p>
+              A pessoa em destaque hoje é{' '}
+              {highlightedCharacter.gender === 'female' ? 'a' : 'o'} ilustre{' '}
+              {highlightedCharacter.name}, nascido no ano{' '}
+              {highlightedCharacter.birth_year} no planeta{' '}
+              {highlightedCharacterPlanet?.name}.
+            </p>
+          </Card>
 
-        <Card title="Recomendação de viagem">
-          <span className="text-lg font-semibold">{randomPlanet.name}</span>
-          <p>
-            O planeta {randomPlanet.name} tem uma população de{' '}
-            {randomPlanet.population} habitantes, um período de rotação de{' '}
-            {randomPlanet.rotation_period} horas e um período orbital de{' '}
-            {randomPlanet.orbital_period} horas.
-          </p>
-        </Card>
+          <Card className="col-start-1" title="Recomendação de viagem">
+            <span className="text-lg font-semibold">{randomPlanet.name}</span>
+            <p>
+              O planeta {randomPlanet.name} tem uma população de{' '}
+              {randomPlanet.population} habitantes, um período de rotação de{' '}
+              {randomPlanet.rotation_period} horas e um período orbital de{' '}
+              {randomPlanet.orbital_period} horas.
+            </p>
+          </Card>
+
+          <Card
+            className="row-start-1 row-end-3 col-start-2"
+            title="Compre a sua nave!"
+          >
+            <span className="text-lg font-semibold">{randomStarship.name}</span>
+            <p>
+              A nave {randomStarship.name}, modelo {randomStarship.model} é a
+              nave ideal para você, ela possui {randomStarship.length} metros de
+              comprimento, espaço para {randomStarship.cargo_capacity} quilos de
+              carga, {randomStarship.passengers} passageiros e uma avaliação de
+              ⭐{randomStarship.hyperdrive_rating} no Hyperdrive.
+            </p>
+            <p>
+              E custando a pechincha de{' '}
+              <strong>{randomStarship.cost_in_credits}</strong> créditos, clique
+              no botão abaixo para comprar!
+            </p>
+            <div className="flex mt-4 justify-around">
+              <Button variant="primary">Ver detalhes</Button>
+            </div>
+          </Card>
+        </div>
       </Layout>
     </div>
   );
