@@ -1,6 +1,6 @@
 import Head from 'next/head';
 
-import { Button, Card, Main } from 'components';
+import { Button, Card } from 'components';
 import { Character } from 'interfaces/Characters';
 import Layout from 'parts/Layout/Layout';
 import api from 'services/api';
