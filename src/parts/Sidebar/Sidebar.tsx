@@ -46,7 +46,7 @@ const Sidebar: React.FC = () => {
           </div>
           <nav className="flex-grow md:block px-4 pb-4 md:pb-0 md:overflow-y-auto">
             <SidebarLink href="/">Início</SidebarLink>
-            <SidebarLink href="/characters">Pessoas</SidebarLink>
+            <SidebarLink href="/characters/1">Pessoas</SidebarLink>
             <SidebarLink href="/planets">Planetas</SidebarLink>
             <SidebarLink href="/spaceships">Naves</SidebarLink>
           </nav>

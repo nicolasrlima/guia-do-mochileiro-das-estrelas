@@ -1,0 +1,17 @@
+@layer utilities {
+  .previous-next-button {
+    @apply relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50;
+  }
+
+  .page-button {
+    @apply items-center px-4 py-2 border text-sm font-medium cursor-pointer;
+  }
+
+  .page-button__inactive {
+    @apply bg-white border-gray-300 text-gray-500 hover:bg-gray-50;
+  }
+
+  .page-button__active {
+    @apply bg-indigo-50 border-indigo-500 text-indigo-600;
+  }
+}

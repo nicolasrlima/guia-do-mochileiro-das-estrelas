@@ -6,7 +6,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ sidebarOpener }) => {
   return (
-    <div className="bg-gray-900 container md:hidden absolute p-4 flex justify-between">
+    <div className="bg-gray-900 container md:hidden absolute p-4 flex justify-between z-10">
       <a
         href="#"
         className="text-lg font-semibold tracking-widest text-white uppercase rounded-lg dark-mode:text-white focus:outline-none focus:shadow-outline"
