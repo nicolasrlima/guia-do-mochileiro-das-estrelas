@@ -14,23 +14,32 @@ interface CharacterProps {
 }
 
 const Characters = ({ allCharacters, allCharactersCount }: CharacterProps) => {
-  const { pathname, query, push, events } = useRouter();
+  const { asPath, pathname, query, push } = useRouter();
 
+  const [characters, setCharacters] = useState<Character[]>(allCharacters);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const handleStart = (url) => url !== pathname && setLoading(true);
-    const handleComplete = () => setLoading(false);
-    events.on('routeChangeStart', handleStart);
-    events.on('routeChangeComplete', handleComplete);
-    events.on('routeChangeError', handleComplete);
+  const changePage = async (page: number) => {
+    setLoading(true);
 
-    return () => {
-      events.off('routeChangeStart', handleStart);
-      events.off('routeChangeComplete', handleComplete);
-      events.off('routeChangeError', handleComplete);
-    };
-  });
+    push(
+      {
+        pathname,
+        query: {
+          ...query,
+          page
+        }
+      },
+      null,
+      { shallow: true }
+    );
+
+    const { data } = await api.get<{ results: Character[]; count: number }>(
+      `/people?page=${page}`
+    );
+    setCharacters(data.results);
+    setLoading(false);
+  };
 
   return (
     <div>
@@ -46,15 +55,13 @@ const Characters = ({ allCharacters, allCharactersCount }: CharacterProps) => {
           <div className="border border-solid" />
           {!loading ? (
             <div className="divide-y">
-              {allCharacters.map((character) => (
+              {characters.map((character) => (
                 <div className="px-4 py-4 sm:px-6" key={character.url}>
                   <div className="flex items-center justify-between">
                     <span className="font-medium truncate">
                       {character.name}
                     </span>
-                    <Link
-                      href={`/characters/${character.url.split('people/')[1]}`}
-                    >
+                    <Link href={`details/${character.url.split('people/')[1]}`}>
                       <span className="px-2 text-sm leading-5 text-indigo-600 font-semibold cursor-pointer">
                         Ver detalhes
                       </span>
@@ -82,12 +89,7 @@ const Characters = ({ allCharacters, allCharactersCount }: CharacterProps) => {
 
           <PagesController
             currentPage={query?.page ? +query.page : 1}
-            onPageChange={(page) => {
-              push({
-                pathname: '/characters',
-                query: { page }
-              });
-            }}
+            onPageChange={(page) => changePage(page)}
             totalPages={Math.ceil(allCharactersCount / 10)}
           />
         </Paper>
@@ -98,12 +100,34 @@ const Characters = ({ allCharacters, allCharactersCount }: CharacterProps) => {
 
 export default Characters;
 
-export async function getServerSideProps({ query }) {
-  const allCharactersResponse = await api.get(
-    `/people/${query?.page ? `?page=${query.page}` : ''}`
+export const getStaticPaths = async () => {
+  const { data } = await api.get<{ count: number }>(`/people`);
+
+  const pagesNumber = Math.ceil(data.count / 10);
+
+  const paths = [...Array(pagesNumber)].map((_, i) => ({
+    params: {
+      page: `${i + 1}`
+    }
+  }));
+
+  return {
+    paths,
+    fallback: false
+  };
+};
+
+export const getStaticProps = async ({
+  params
+}: {
+  params: { page: string };
+}) => {
+  const { page } = params;
+  const { data } = await api.get<{ results: Character[]; count: number }>(
+    `/people?page=${page}`
   );
-  const allCharacters = allCharactersResponse.data.results;
-  const allCharactersCount = allCharactersResponse.data.count;
+  const allCharacters = data.results;
+  const allCharactersCount = data.count;
 
   return {
     props: {
@@ -111,4 +135,4 @@ export async function getServerSideProps({ query }) {
       allCharactersCount
     }
   };
-}
+};
